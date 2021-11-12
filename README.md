@@ -5,6 +5,7 @@ f(V,t) = sum(RBF(V(t),c_q)) + w*I(t)
 
 
 Keep in mind that V is a D dimensional vector of time delays (V(t),V(t-tau),...V(t-tau*(D-1)). Then the update rule looks like this:
+
 V_0(n+1) = V_0(n) + sum(RBF(V(n),c_q)) + w*I(n)
 
 
@@ -17,20 +18,27 @@ We also include an example result in the folder titled "Example" where we tested
 DDF Basics:
 Here is a quick refresher on what DDF is doing and what the code is trying to accomplish.
 Starting with the dynamical equations, we have some system that has the following differential equations
+
 dx(t)/dt = F(x(t))
 
 We want to model the behavior of the observed variable x(t), but F(x(t)) is unkown to us. We can approximate the problem with the Euler Formula
+
 x(n+1) = x(n) + dt*F(x(t))
 
 Now we want a Function Representation for F(x(t)). Inspired by our knowledge of NaKL, we choose a representation the form:
+
 f(x(t)) = sum(RBF(V(n),c_q)) + w*I(n)
 
 We use these two equations above to write down a cost function to fit our coefficients in the RBF's and the w infront of I:
+
 Minimize sum_length [(x(n+1)-x(n)) - sum(RBF(V(n),c_q)) + w*I(n)]^2
 
 Because the function representation is linear in the coefficients, we can rewrite the formula in terms of W*X where W are the weights, and X is the value of either the RBF or the Current. This minimization problem can be solved with Ridge Regression:
+
 W = YX^T(XX^T)^-1
+
 [Y] = 1 x Time
+
 [X] = Parameter Length x Time
 
 with the minizimation done, f(x(t)) can now be used to forecast forward in time.
